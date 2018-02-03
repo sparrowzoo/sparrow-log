@@ -394,6 +394,7 @@ public class SparrowLoggerImpl implements Logger {
                 str + CONSTANT.ENTER_TEXT;
 
             //阻塞文件锁
+            //todo OverlappingFileLockException exception ?
             FileLock fl = fileOutputStream.getChannel().lock();
             if (fl == null) {
                 return;
