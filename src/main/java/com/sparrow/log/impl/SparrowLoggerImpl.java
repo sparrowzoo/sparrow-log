@@ -30,7 +30,9 @@ import org.slf4j.Logger;
 import org.slf4j.Marker;
 
 import java.io.*;
+import java.nio.channels.FileChannel;
 import java.nio.channels.FileLock;
+import java.nio.channels.OverlappingFileLockException;
 
 /**
  * @author harry
@@ -77,7 +79,7 @@ public class SparrowLoggerImpl implements Logger {
 
     @Override
     public void trace(String msg, Throwable t) {
-        this.writeLog(StringUtility.printStackTrace(msg,t), LOG_LEVEL.TRACE);
+        this.writeLog(StringUtility.printStackTrace(msg, t), LOG_LEVEL.TRACE);
     }
 
     @Override
@@ -138,7 +140,7 @@ public class SparrowLoggerImpl implements Logger {
 
     @Override
     public void debug(String msg, Throwable t) {
-        this.writeLog(StringUtility.printStackTrace(msg,t), LOG_LEVEL.DEBUG);
+        this.writeLog(StringUtility.printStackTrace(msg, t), LOG_LEVEL.DEBUG);
     }
 
     @Override
@@ -202,7 +204,7 @@ public class SparrowLoggerImpl implements Logger {
 
     @Override
     public void warn(String msg, Throwable t) {
-        this.writeLog(StringUtility.printStackTrace(msg,t), LOG_LEVEL.WARN);
+        this.writeLog(StringUtility.printStackTrace(msg, t), LOG_LEVEL.WARN);
     }
 
     @Override
@@ -262,7 +264,7 @@ public class SparrowLoggerImpl implements Logger {
 
     @Override
     public void info(String msg, Throwable t) {
-        this.writeLog(StringUtility.printStackTrace(msg,t), LOG_LEVEL.INFO);
+        this.writeLog(StringUtility.printStackTrace(msg, t), LOG_LEVEL.INFO);
     }
 
     @Override
@@ -383,29 +385,40 @@ public class SparrowLoggerImpl implements Logger {
                 directory.mkdirs();
             }
             fileOutputStream = new FileOutputStream(path
-                + String.format("/log%1$s.log",
-                DateTimeUtility.getFormatCurrentTime(DATE_TIME.FORMAT_YYYYMMDD)),
-                true);
+                    + String.format("/log%1$s.log",
+                    DateTimeUtility.getFormatCurrentTime(DATE_TIME.FORMAT_YYYYMMDD)),
+                    true);
 
             String log = logLevel.toString() + "|"
-                + DateTimeUtility.getFormatCurrentTime() + "|"
-                + this.className + CONSTANT.ENTER_TEXT +
-                "--------------------------------------------------------------" + CONSTANT.ENTER_TEXT +
-                str + CONSTANT.ENTER_TEXT;
+                    + DateTimeUtility.getFormatCurrentTime() + "|"
+                    + this.className + CONSTANT.ENTER_TEXT +
+                    "--------------------------------------------------------------" + CONSTANT.ENTER_TEXT +
+                    str + CONSTANT.ENTER_TEXT;
 
             //阻塞文件锁
             //todo OverlappingFileLockException exception ?
-            FileLock fl = fileOutputStream.getChannel().lock();
-            if (fl == null) {
-                return;
-            }
+            //采用共享锁
+            //fl = fc.tryLock(0,Long.MAX_VALUE,true);
+            FileChannel fileChannel = fileOutputStream.getChannel();
+            FileLock fileLock = null;
             try {
+                while (true) {
+                    try {
+                        fileLock = fileChannel.tryLock(0, Integer.MAX_VALUE, true);
+                        if (fileLock != null) {
+                            break;
+                        }
+                    } catch (OverlappingFileLockException ignore) {
+                    }
+                }
                 fileOutputStream.write(log.getBytes(CONSTANT.CHARSET_UTF_8));
                 if (Boolean.TRUE.toString().equalsIgnoreCase(logPrintConsole)) {
                     System.out.println(log);
                 }
             } finally {
-                fl.release();
+                if (fileLock != null) {
+                    fileLock.release();
+                }
             }
         } catch (Exception e) {
             e.printStackTrace();
