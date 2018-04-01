@@ -395,6 +395,7 @@ public class SparrowLoggerImpl implements Logger {
                     "--------------------------------------------------------------" + CONSTANT.ENTER_TEXT +
                     str + CONSTANT.ENTER_TEXT;
 
+            //https://blog.csdn.net/shijinupc/article/details/7875826
             //阻塞文件锁
             //todo OverlappingFileLockException exception ?
             //采用共享锁
@@ -404,7 +405,7 @@ public class SparrowLoggerImpl implements Logger {
             try {
                 while (true) {
                     try {
-                        fileLock = fileChannel.tryLock(0, Integer.MAX_VALUE, true);
+                        fileLock = fileChannel.tryLock();
                         if (fileLock != null) {
                             break;
                         }
