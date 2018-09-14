@@ -10,7 +10,7 @@
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="module" module-name="sparrow" />
-    <orderEntry type="library" name="Maven: mysql:mysql-connector-java:5.1.34" level="project" />
+    <orderEntry type="library" name="Maven: mysql:mysql-connector-java:5.1.46" level="project" />
     <orderEntry type="library" name="Maven: commons-pool:commons-pool:1.5.5" level="project" />
     <orderEntry type="library" name="Maven: org.apache.lucene:lucene-core:3.6.1" level="project" />
     <orderEntry type="library" name="Maven: org.apache.poi:poi:3.12" level="project" />
@@ -20,8 +20,7 @@
     <orderEntry type="library" name="Maven: org.apache.xmlbeans:xmlbeans:2.6.0" level="project" />
     <orderEntry type="library" name="Maven: stax:stax-api:1.0.1" level="project" />
     <orderEntry type="library" name="Maven: org.slf4j:slf4j-api:1.7.12" level="project" />
-    <orderEntry type="library" name="Maven: javax.mail:mail:1.4" level="project" />
-    <orderEntry type="library" name="Maven: javax.activation:activation:1.1" level="project" />
+    <orderEntry type="library" name="Maven: javax.mail:mail:1.6.1" level="project" />
     <orderEntry type="library" name="Maven: javax.persistence:persistence-api:1.0" level="project" />
   </component>
 </module>
