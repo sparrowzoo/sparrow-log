@@ -19,9 +19,9 @@ package com.sparrow.log.impl;
 
 import com.sparrow.constant.CACHE_KEY;
 import com.sparrow.constant.CONFIG;
-import com.sparrow.constant.CONSTANT;
+import com.sparrow.protocol.constant.CONSTANT;
 import com.sparrow.constant.DATE_TIME;
-import com.sparrow.constant.magic.SYMBOL;
+import com.sparrow.protocol.constant.magic.SYMBOL;
 import com.sparrow.core.Cache;
 import com.sparrow.enums.LOG_LEVEL;
 import com.sparrow.utility.DateTimeUtility;
