@@ -20,7 +20,7 @@ package org.slf4j.impl;
 import com.sparrow.concurrent.SparrowThreadFactory;
 import com.sparrow.constant.CACHE_KEY;
 import com.sparrow.constant.CONFIG;
-import com.sparrow.core.Cache;
+import com.sparrow.core.cache.Cache;
 import com.sparrow.enums.LOG_LEVEL;
 import com.sparrow.utility.Config;
 import java.util.Map;
