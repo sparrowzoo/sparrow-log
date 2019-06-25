@@ -20,7 +20,7 @@ package org.slf4j.impl;
 import com.sparrow.concurrent.SparrowThreadFactory;
 import com.sparrow.constant.CACHE_KEY;
 import com.sparrow.constant.CONFIG;
-import com.sparrow.core.cache.Cache;
+import com.sparrow.core.cache.CacheBack;
 import com.sparrow.enums.LOG_LEVEL;
 import com.sparrow.utility.Config;
 import java.util.Map;
@@ -56,8 +56,8 @@ public class StaticLoggerBinder implements LoggerFactoryBinder {
 
     private StaticLoggerBinder() {
         Integer level = LOG_LEVEL.INFO.ordinal();
-        Cache.getInstance().put(CACHE_KEY.LOG, CONFIG.LOG_LEVEL, level);
-        Cache.getInstance().put(CACHE_KEY.LOG, CONFIG.LOG_PRINT_CONSOLE, true);
+        CacheBack.getInstance().put(CACHE_KEY.LOG, CONFIG.LOG_LEVEL, level);
+        CacheBack.getInstance().put(CACHE_KEY.LOG, CONFIG.LOG_PRINT_CONSOLE, true);
 
         ScheduledExecutorService scheduledExecutorService = new ScheduledThreadPoolExecutor(1,
             new SparrowThreadFactory.Builder().namingPattern("log-config-%d").daemon(true).build());
@@ -67,10 +67,10 @@ public class StaticLoggerBinder implements LoggerFactoryBinder {
                 Map<String, String> config = Config.loadFromClassesPath("/log.properties");
                 if (config != null) {
                     if (config.get(CONFIG.LOG_LEVEL) != null) {
-                        Cache.getInstance().put(CACHE_KEY.LOG, CONFIG.LOG_LEVEL, LOG_LEVEL.valueOf(config.get(CONFIG.LOG_LEVEL).toUpperCase()).ordinal());
+                        CacheBack.getInstance().put(CACHE_KEY.LOG, CONFIG.LOG_LEVEL, LOG_LEVEL.valueOf(config.get(CONFIG.LOG_LEVEL).toUpperCase()).ordinal());
                     }
                     if (config.get(CONFIG.LOG_PRINT_CONSOLE) != null) {
-                        Cache.getInstance().put(CACHE_KEY.LOG, CONFIG.LOG_PRINT_CONSOLE, Boolean.valueOf(config.get(CONFIG.LOG_PRINT_CONSOLE)));
+                        CacheBack.getInstance().put(CACHE_KEY.LOG, CONFIG.LOG_PRINT_CONSOLE, Boolean.valueOf(config.get(CONFIG.LOG_PRINT_CONSOLE)));
                     }
                 }
             }

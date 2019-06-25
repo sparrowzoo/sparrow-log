@@ -21,7 +21,7 @@ import com.sparrow.constant.CACHE_KEY;
 import com.sparrow.constant.CONFIG;
 import com.sparrow.protocol.constant.CONSTANT;
 import com.sparrow.constant.DATE_TIME;
-import com.sparrow.core.cache.Cache;
+import com.sparrow.core.cache.CacheBack;
 import com.sparrow.enums.LOG_LEVEL;
 import com.sparrow.utility.DateTimeUtility;
 import com.sparrow.utility.StringUtility;
@@ -373,8 +373,8 @@ public class SparrowLoggerImpl implements Logger {
     private void writeLog(String str, LOG_LEVEL logLevel) {
         FileOutputStream fileOutputStream = null;
         try {
-            int minLevel = Integer.valueOf(Cache.getInstance().get(CACHE_KEY.LOG, CONFIG.LOG_LEVEL).toString());
-            String logPrintConsole = Cache.getInstance().get(CACHE_KEY.LOG, CONFIG.LOG_PRINT_CONSOLE).toString();
+            int minLevel = Integer.valueOf(CacheBack.getInstance().get(CACHE_KEY.LOG, CONFIG.LOG_LEVEL).toString());
+            String logPrintConsole = CacheBack.getInstance().get(CACHE_KEY.LOG, CONFIG.LOG_PRINT_CONSOLE).toString();
             if (logLevel.ordinal() < minLevel) {
                 return;
             }
