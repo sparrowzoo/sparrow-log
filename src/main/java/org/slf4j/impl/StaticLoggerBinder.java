@@ -21,6 +21,7 @@ import com.sparrow.concurrent.SparrowThreadFactory;
 import com.sparrow.constant.CACHE_KEY;
 import com.sparrow.constant.CONFIG;
 import com.sparrow.core.cache.Cache;
+import com.sparrow.core.cache.StrongDurationCache;
 import com.sparrow.enums.LOG_LEVEL;
 import com.sparrow.utility.Config;
 import java.util.Map;
@@ -52,12 +53,14 @@ public class StaticLoggerBinder implements LoggerFactoryBinder {
     private static final String LOGGER_FACTORY_CLASS = SparrowLoggerFactory.class
         .getName();
 
+    private static Cache<String,Object> logCache=new StrongDurationCache<>(CACHE_KEY.LOG);
+
     private final ILoggerFactory loggerFactory;
 
     private StaticLoggerBinder() {
         Integer level = LOG_LEVEL.INFO.ordinal();
-        Cache.getInstance().put(CACHE_KEY.LOG, CONFIG.LOG_LEVEL, level);
-        Cache.getInstance().put(CACHE_KEY.LOG, CONFIG.LOG_PRINT_CONSOLE, true);
+        logCache.put(CONFIG.LOG_LEVEL, level);
+        logCache.put(CONFIG.LOG_PRINT_CONSOLE, true);
 
         ScheduledExecutorService scheduledExecutorService = new ScheduledThreadPoolExecutor(1,
             new SparrowThreadFactory.Builder().namingPattern("log-config-%d").daemon(true).build());
@@ -67,10 +70,10 @@ public class StaticLoggerBinder implements LoggerFactoryBinder {
                 Map<String, String> config = Config.loadFromClassesPath("/log.properties");
                 if (config != null) {
                     if (config.get(CONFIG.LOG_LEVEL) != null) {
-                        Cache.getInstance().put(CACHE_KEY.LOG, CONFIG.LOG_LEVEL, LOG_LEVEL.valueOf(config.get(CONFIG.LOG_LEVEL).toUpperCase()).ordinal());
+                        logCache.put(CONFIG.LOG_LEVEL, LOG_LEVEL.valueOf(config.get(CONFIG.LOG_LEVEL).toUpperCase()).ordinal());
                     }
                     if (config.get(CONFIG.LOG_PRINT_CONSOLE) != null) {
-                        Cache.getInstance().put(CACHE_KEY.LOG, CONFIG.LOG_PRINT_CONSOLE, Boolean.valueOf(config.get(CONFIG.LOG_PRINT_CONSOLE)));
+                        logCache.put(CONFIG.LOG_PRINT_CONSOLE, Boolean.valueOf(config.get(CONFIG.LOG_PRINT_CONSOLE)));
                     }
                 }
             }
