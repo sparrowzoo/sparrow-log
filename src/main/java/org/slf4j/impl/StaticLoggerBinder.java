@@ -53,11 +53,12 @@ public class StaticLoggerBinder implements LoggerFactoryBinder {
     private static final String LOGGER_FACTORY_CLASS = SparrowLoggerFactory.class
         .getName();
 
-    private static Cache<String,Object> logCache=new StrongDurationCache<>(CACHE_KEY.LOG);
+    private static Cache<String,Object> logCache;
 
     private final ILoggerFactory loggerFactory;
 
     private StaticLoggerBinder() {
+        logCache=new StrongDurationCache<>(CACHE_KEY.LOG);
         Integer level = LOG_LEVEL.INFO.ordinal();
         logCache.put(CONFIG.LOG_LEVEL, level);
         logCache.put(CONFIG.LOG_PRINT_CONSOLE, true);
